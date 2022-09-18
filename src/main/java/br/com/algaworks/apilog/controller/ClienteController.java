@@ -2,6 +2,8 @@ package br.com.algaworks.apilog.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +64,7 @@ public class ClienteController {
 	 */
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Cliente adicionar(@RequestBody Cliente cliente) {
+	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
 		return clienteRepository.save(cliente);
 	}
 	
@@ -77,7 +79,7 @@ public class ClienteController {
 	 * @return
 	 */
 	@PutMapping("/{clienteID}")
-	public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteID, 
+	public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteID, 
 			@RequestBody Cliente cliente){
 		if(!clienteRepository.existsById(clienteID)) {
 			return ResponseEntity.notFound().build();
