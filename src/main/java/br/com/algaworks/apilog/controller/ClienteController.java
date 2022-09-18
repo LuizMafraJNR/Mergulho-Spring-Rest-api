@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.algaworks.apilog.domain.service.CatalogoClienteService;
 import br.com.algaworks.apilog.model.Cliente;
 import br.com.algaworks.apilog.repository.ClienteRepository;
 
@@ -26,6 +27,8 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	@Autowired
+	private CatalogoClienteService catalogoClienteService;
 	
 	/**
 	 * LISTA TODOS OS CLIENTE SEM NENHUM PARAMETRO.
@@ -65,7 +68,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+		return catalogoClienteService.salvar(cliente);
 	}
 	
 	/**
@@ -85,7 +88,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		cliente.setId(clienteID); // Para não criar um cliente novo.
-		cliente = clienteRepository.save(cliente);
+		cliente = catalogoClienteService.salvar(cliente);
 		return ResponseEntity.ok(cliente);
 	}
 	
@@ -101,7 +104,7 @@ public class ClienteController {
 		if(!clienteRepository.existsById(clienteID)) {
 			return ResponseEntity.notFound().build();
 		}
-		clienteRepository.deleteById(clienteID);
+		catalogoClienteService.excluir(clienteID);
 		return ResponseEntity.noContent().build();
 	}
 }
