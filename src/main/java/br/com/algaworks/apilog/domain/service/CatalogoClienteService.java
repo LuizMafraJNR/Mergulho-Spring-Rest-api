@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.algaworks.apilog.domain.exception.NegocioException;
 import br.com.algaworks.apilog.model.Cliente;
 import br.com.algaworks.apilog.repository.ClienteRepository;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,12 @@ public class CatalogoClienteService {
 	
 	@Transactional // - Ela declara que esse metodo deve ser executado dentro de uma
 	public Cliente salvar(Cliente cliente) {
-	// transição
+		boolean emailEmUso = clienteRepository.findByEmail(cliente.getEmail())
+				.stream()
+				.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
+		if(emailEmUso) {
+			throw new NegocioException("Já existe um cliente ccadastrado com este email.");
+		}
 		return clienteRepository.save(cliente);
 	}
 	
